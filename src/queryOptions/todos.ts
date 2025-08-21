@@ -1,7 +1,7 @@
 import { queryOptions } from "@tanstack/react-query";
 
 
-  const getTodos=async(page:number=1):Promise<Todo[]>=>{
+  const getTodos=async(page:number=1):Promise<Todo>=>{
     const response= await fetch(`https://jsonplaceholder.typicode.com/todos/${page}`);
     return await response.json();
   }

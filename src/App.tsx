@@ -18,8 +18,8 @@ function App() {
       {/* <div className='text-blue-800'>
         {isPending? "pending":  JSON.stringify(data)}
       </div> */}
-      <div>
-        {data[0].title}
+      <div className='text-blue-800'>
+        {data.title}
       </div>
       <button onClick={()=>refetch()}
         className='bg-blue-600 text-black p-2 rounded-2xl'
