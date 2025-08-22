@@ -9,8 +9,9 @@ import { queryOptions } from "@tanstack/react-query";
 export function todos(page:number,on:boolean){
     return queryOptions({
     queryKey:['todos',page],
-    queryFn : ()=>getTodos(),
+    queryFn : ()=>getTodos(page),
     enabled: on,
+    staleTime:60000
     })  
 }
 

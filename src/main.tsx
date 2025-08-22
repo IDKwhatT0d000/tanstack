@@ -1,18 +1,48 @@
 import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
 import './index.css'
-import App from './App.tsx'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import {
+  RouterProvider,
+  createRouter,
+  createRootRoute,
+  createRoute
+} from '@tanstack/react-router'
+import NavigationHeader from './NavigationHeader.tsx';
+import Home from './pages/Home.tsx';
+import { createRoot } from "react-dom/client";  // ✅ React 18 API
+import App from './App.tsx';
 
 
+const queryClient = new QueryClient();
 
-const queryClient=new QueryClient();
+export const rootRoute = createRootRoute({
+  component: NavigationHeader
+})
 
+const homeRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/',
+  component: Home
+})
 
-createRoot(document.getElementById('root')!).render(
+const dashboardRoute=createRoute({
+  getParentRoute:()=>rootRoute,
+  component:App,
+  path:'/dashboard',
+
+})
+
+const routeTree = rootRoute.addChildren([homeRoute,dashboardRoute])
+
+const router = createRouter({ routeTree })
+
+const rootElement = document.getElementById('root')!;
+
+const root = createRoot(rootElement);  // ✅ use createRoot directly
+root.render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-          <App />
+      <RouterProvider router={router} />
     </QueryClientProvider>
-  </StrictMode>,
-)
+  </StrictMode>
+);
