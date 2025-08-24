@@ -10,11 +10,19 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PostsIndexRouteImport } from './routes/posts/index'
 import { Route as AboutIndexRouteImport } from './routes/about/index'
+import { Route as PostsPostIDRouteImport } from './routes/posts/$postID'
+import { Route as AboutSettingsIndexRouteImport } from './routes/about/settings/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PostsIndexRoute = PostsIndexRouteImport.update({
+  id: '/posts/',
+  path: '/posts/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutIndexRoute = AboutIndexRouteImport.update({
@@ -22,31 +30,59 @@ const AboutIndexRoute = AboutIndexRouteImport.update({
   path: '/about/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PostsPostIDRoute = PostsPostIDRouteImport.update({
+  id: '/posts/$postID',
+  path: '/posts/$postID',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutSettingsIndexRoute = AboutSettingsIndexRouteImport.update({
+  id: '/about/settings/',
+  path: '/about/settings/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/posts/$postID': typeof PostsPostIDRoute
   '/about': typeof AboutIndexRoute
+  '/posts': typeof PostsIndexRoute
+  '/about/settings': typeof AboutSettingsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/posts/$postID': typeof PostsPostIDRoute
   '/about': typeof AboutIndexRoute
+  '/posts': typeof PostsIndexRoute
+  '/about/settings': typeof AboutSettingsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/posts/$postID': typeof PostsPostIDRoute
   '/about/': typeof AboutIndexRoute
+  '/posts/': typeof PostsIndexRoute
+  '/about/settings/': typeof AboutSettingsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about'
+  fullPaths: '/' | '/posts/$postID' | '/about' | '/posts' | '/about/settings'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about'
-  id: '__root__' | '/' | '/about/'
+  to: '/' | '/posts/$postID' | '/about' | '/posts' | '/about/settings'
+  id:
+    | '__root__'
+    | '/'
+    | '/posts/$postID'
+    | '/about/'
+    | '/posts/'
+    | '/about/settings/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PostsPostIDRoute: typeof PostsPostIDRoute
   AboutIndexRoute: typeof AboutIndexRoute
+  PostsIndexRoute: typeof PostsIndexRoute
+  AboutSettingsIndexRoute: typeof AboutSettingsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -58,6 +94,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/posts/': {
+      id: '/posts/'
+      path: '/posts'
+      fullPath: '/posts'
+      preLoaderRoute: typeof PostsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about/': {
       id: '/about/'
       path: '/about'
@@ -65,12 +108,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/posts/$postID': {
+      id: '/posts/$postID'
+      path: '/posts/$postID'
+      fullPath: '/posts/$postID'
+      preLoaderRoute: typeof PostsPostIDRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about/settings/': {
+      id: '/about/settings/'
+      path: '/about/settings'
+      fullPath: '/about/settings'
+      preLoaderRoute: typeof AboutSettingsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PostsPostIDRoute: PostsPostIDRoute,
   AboutIndexRoute: AboutIndexRoute,
+  PostsIndexRoute: PostsIndexRoute,
+  AboutSettingsIndexRoute: AboutSettingsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
